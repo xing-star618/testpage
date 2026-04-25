@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>紧急通知</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(135deg, #222, #444);
+    color: white;
+    text-align: center;
+}
+
+.container {
+    margin-top: 80px;
+}
+
+.card {
+    background: #333;
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    animation: shake 0.5s infinite alternate;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #ff4444;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff0000;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    color: yellow;
+}
+
+@keyframes shake {
+    from { transform: translateX(-2px); }
+    to { transform: translateX(2px); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+    <h1>⚠️ 紧急通知</h1>
+    <p>你的账户检测到异常行为</p>
+    <p>请立即处理👇</p>
+
+    <button onclick="yes()">立即修复</button>
+    <button onclick="no()">无视</button>
+</div>
+
+<p class="result" id="result"></p>
+
+</div>
+
+<script>
+function yes() {
+    document.getElementById("result").innerText =
+    "修复成功 ✅\n但你欠我50块 💸";
+}
+
+function no() {
+    document.getElementById("result").innerText =
+    "系统已锁定 🔒\n解除需要v我50 😂";
+}
+</script>
+
+</body>
+</html>
