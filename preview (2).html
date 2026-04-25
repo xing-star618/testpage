@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今天也想找你</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Helvetica", sans-serif;
+    background: linear-gradient(135deg, #ffd1dc, #ffe6f0);
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 1s ease;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+button {
+    padding: 12px 18px;
+    margin: 10px;
+    border: none;
+    border-radius: 20px;
+    background: #ff6699;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff3366;
+}
+
+.result {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #ff3366;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>今天突然想到你了 💭</h1>
+
+<div class="card">
+    <h2>有个小问题想问你👇</h2>
+    <p>可以v我50吗 🥺</p>
+
+    <button onclick="yes()">可以</button>
+    <button onclick="no()">不可以</button>
+</div>
+
+<p class="result" id="result"></p>
+
+</div>
+
+<script>
+function yes() {
+    document.getElementById("result").innerText =
+    "那我请你喝奶茶 😄（其实是想找你聊天）";
+}
+
+function no() {
+    document.getElementById("result").innerText =
+    "那我v你一个关心 ❤️（其实更想见你）";
+}
+</script>
+
+</body>
+</html>
