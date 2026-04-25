@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日点单</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f5f5f5;
+}
+
+.header {
+    background: #ffcc00;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.container {
+    padding: 10px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+button {
+    border: none;
+    background: #ff6600;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.result {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    padding: 15px;
+    box-shadow: 0 -5px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    🍔 今日专属点单（只为你营业）
+</div>
+
+<div class="container">
+
+<div class="card">
+    <h3>🍜 主食</h3>
+    <div class="item">
+        <span>火锅</span>
+        <button onclick="order('火锅')">选这个</button>
+    </div>
+    <div class="item">
+        <span>炸鸡</span>
+        <button onclick="order('炸鸡')">选这个</button>
+    </div>
+    <div class="item">
+        <span>奶茶套餐</span>
+        <button onclick="order('奶茶')">选这个</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3>💖 特别服务</h3>
+    <div class="item">
+        <span>陪你聊天</span>
+        <button onclick="order('聊天')">选这个</button>
+    </div>
+    <div class="item">
+        <span>陪你散步</span>
+        <button onclick="order('散步')">选这个</button>
+    </div>
+    <div class="item">
+        <span>无条件关心你</span>
+        <button onclick="order('关心')">选这个</button>
+    </div>
+</div>
+
+</div>
+
+<div class="result" id="result">
+    请选择你的订单 💕
+</div>
+
+<script>
+function order(item) {
+    let text = "";
+
+    if(item === '火锅' || item === '炸鸡' || item === '奶茶') {
+        text = "好的，改天带你去吃 " + item + " 😊";
+    } else {
+        text = "这个不用选，我本来就会做 ❤️";
+    }
+
+    document.getElementById("result").innerText = text;
+}
+</script>
+
+</body>
+</html>
