@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>给你的专属页面</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Helvetica", sans-serif;
+    background: linear-gradient(135deg, #ffd1dc, #ffe6f0);
+    text-align: center;
+    color: #333;
+}
+
+.container {
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 1s ease;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 8px;
+    border: none;
+    border-radius: 20px;
+    background: #ff6699;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #ff3366;
+}
+
+.result {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #ff3366;
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #888;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>今天也有点在意你 💕</h1>
+
+<div class="card">
+    <h2>🍜 今天想吃什么？</h2>
+    <button onclick="chooseFood('火锅')">火锅</button>
+    <button onclick="chooseFood('奶茶')">奶茶</button>
+    <button onclick="chooseFood('甜点')">甜点</button>
+</div>
+
+<div class="card">
+    <h2>🎁 最近想要什么？</h2>
+    <button onclick="chooseWish('小礼物')">小礼物</button>
+    <button onclick="chooseWish('出去玩')">出去玩</button>
+    <button onclick="chooseWish('多一点陪伴')">陪伴</button>
+</div>
+
+<div class="card">
+    <h2>💭 我可以为你做什么？</h2>
+    <button onclick="care()">点我看看</button>
+</div>
+
+<div class="card">
+    <h2>📖 你的选择记录</h2>
+    <div id="history"></div>
+</div>
+
+<p class="result" id="result"></p>
+
+<div class="footer">
+    （这个页面是专门为你做的）
+</div>
+
+</div>
+
+<script>
+function saveData(type, value) {
+    let data = JSON.parse(localStorage.getItem("loveData")) || [];
+    data.push(type + "：" + value);
+    localStorage.setItem("loveData", JSON.stringify(data));
+    showHistory();
+}
+
+function chooseFood(food) {
+    document.getElementById("result").innerText = "那我们去吃 " + food + " 😊";
+    saveData("想吃", food);
+}
+
+function chooseWish(wish) {
+    document.getElementById("result").innerText = "这个我记住了：" + wish + " 💌";
+    saveData("想要", wish);
+}
+
+function care() {
+    document.getElementById("result").innerText = "其实我更想知道你今天过得好不好 ❤️";
+}
+
+function showHistory() {
+    let data = JSON.parse(localStorage.getItem("loveData")) || [];
+    let html = "";
+    data.slice(-5).forEach(item => {
+        html += "<p>" + item + "</p>";
+    });
+    document.getElementById("history").innerHTML = html;
+}
+
+showHistory();
+</script>
+
+</body>
+</html>
