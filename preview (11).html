@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>外太空飞机大战 - 手机触控</title>
+<style>
+body {
+    margin:0;
+    overflow:hidden;
+    background:black;
+}
+canvas {
+    display:block;
+}
+/* 虚拟按钮 */
+#shootBtn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 80px;
+    height: 80px;
+    background: rgba(255,0,0,0.6);
+    border-radius: 50%;
+    text-align:center;
+    line-height:80px;
+    font-size:24px;
+    color:white;
+    user-select:none;
+}
+#joystick {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    width: 120px;
+    height: 120px;
+    background: rgba(0,255,0,0.4);
+    border-radius: 50%;
+    touch-action: none;
+}
+</style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<div id="shootBtn">💥</div>
+<div id="joystick"></div>
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// 玩家飞机
+let player = {x:canvas.width/2-25,y:canvas.height-100,width:50,height:50,speed:7,bullets:[]};
+
+// 敌机
+let enemies = [];
+let enemySpeed = 2;
+let score=0;
+
+// 图片
+const playerImg = new Image();
+playerImg.src = 'https://i.ibb.co/whc2y1V/player-ship.png';
+const enemyImg = new Image();
+enemyImg.src = 'https://i.ibb.co/cF9WgJm/enemy-ship.png';
+
+// 子弹类
+class Bullet{
+    constructor(x,y){this.x=x;this.y=y;this.width=5;this.height=10;this.speed=10;}
+    update(){this.y-=this.speed;}
+    draw(){ctx.fillStyle='yellow';ctx.fillRect(this.x,this.y,this.width,this.height);}
+}
+
+// 敌机类
+class Enemy{
+    constructor(x,y){this.x=x;this.y=y;this.width=50;this.height=50;}
+    update(){this.y+=enemySpeed;}
+    draw(){ctx.drawImage(enemyImg,this.x,this.y,this.width,this.height);}
+}
+
+// 爆炸
+class Explosion{
+    constructor(x,y){this.x=x;this.y=y;this.radius=0;this.maxRadius=30;}
+    update(){this.radius+=2;}
+    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);ctx.fillStyle='orange';ctx.fill();}
+}
+let explosions=[];
+
+// 星星背景
+let stars=[];
+for(let i=0;i<100;i++){
+    stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,speed:Math.random()*0.5+0.2});
+}
+
+// 敌机生成
+let frame=0;
+function spawnEnemy(){let x=Math.random()*(canvas.width-50);enemies.push(new Enemy(x,-50));}
+
+// ---------------- 游戏更新
+function update(){
+    // 背景星星
+    stars.forEach(s=>{s.y+=s.speed;if(s.y>canvas.height)s.y=0;});
+
+    // 更新子弹
+    player.bullets.forEach((b,i)=>{b.update();if(b.y<0)player.bullets.splice(i,1);});
+
+    // 更新敌机
+    enemies.forEach((e,ei)=>{
+        e.update();
+        // 碰撞检测
+        player.bullets.forEach((b,bi)=>{
+            if(b.x<b.x+b.width && b.x+b.width>e.x && b.y<b.y+b.height && b.y+b.height>e.y){
+                explosions.push(new Explosion(e.x+e.width/2,e.y+e.height/2));
+                enemies.splice(ei,1);player.bullets.splice(bi,1);score+=10;
+            }
+        });
+        // 玩家碰撞
+        if(player.x<e.x+e.width && player.x+player.width>e.x && player.y<e.y+e.height && player.y+player.height>e.y){
+            alert('游戏结束！得分:'+score);
+            location.reload();
+        }
+    });
+
+    // 更新爆炸
+    explosions.forEach((ex,i)=>{ex.update();if(ex.radius>ex.maxRadius)explosions.splice(i,1);});
+}
+
+// ---------------- 绘制
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='white';ctx.fill();});
+    ctx.drawImage(playerImg,player.x,player.y,player.width,player.height);
+    player.bullets.forEach(b=>b.draw());
+    enemies.forEach(e=>e.draw());
+    explosions.forEach(ex=>ex.draw());
+    ctx.fillStyle='white';ctx.font='20px Arial';ctx.fillText('得分: '+score,20,30);
+}
+
+// ---------------- 游戏循环
+function gameLoop(){
+    frame++;
+    if(frame%100===0) spawnEnemy();
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+gameLoop();
+
+// ---------------- 手机触控
+const joystick=document.getElementById('joystick');
+let touchStart={x:0,y:0};
+joystick.addEventListener('touchstart',e=>{touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY};});
+joystick.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    let dx=e.touches[0].clientX-touchStart.x;
+    let dy=e.touches[0].clientY-touchStart.y;
+    player.x+=dx*0.05;
+    player.y+=dy*0.05;
+    if(player.x<0)player.x=0;
+    if(player.x+player.width>canvas.width)player.x=canvas.width-player.width;
+    if(player.y<0)player.y=0;
+    if(player.y+player.height>canvas.height)player.y=canvas.height-player.height;
+    touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY};
+}, {passive:false});
+
+// 射击按钮
+document.getElementById('shootBtn').addEventListener('touchstart',()=>{
+    if(player.bullets.length<5){
+        player.bullets.push(new Bullet(player.x+player.width/2-2.5,player.y));
+    }
+});
+</script>
+</body>
+</html>
